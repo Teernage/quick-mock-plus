@@ -15,35 +15,35 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { ElSelect } from 'element-plus';
+import { computed } from 'vue'
+import { ElSelect } from 'element-plus'
 
 // 定义组件属性
 const props = defineProps({
   modelValue: {
     type: String,
-    default: 'contains',
+    default: 'contains'
   },
   placeholder: {
     type: String,
-    default: '',
-  },
-});
+    default: ''
+  }
+})
 
 // 定义事件
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
 // 下拉选项
 const options = [
   { value: 'contains', label: '包含' },
-  { value: 'exact', label: '完整匹配' },
-];
+  { value: 'exact', label: '完整匹配' }
+]
 
 // 创建计算属性用于v-model绑定
 const selectedValue = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
+  set: (value) => emit('update:modelValue', value)
+})
 </script>
 
 <style scoped>
