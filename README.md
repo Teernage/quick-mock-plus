@@ -1,4 +1,4 @@
-# quick-mock-plus
+# AI-Mock
 
 轻量级接口模拟工具（Chrome 扩展），基于 Vue 3 + Vite + Element Plus。面向前端/联调场景，提供可视化的规则管理、JSON 树形编辑、AI 一键生成 Mock 数据，以及便捷的搜索与操作体验。
 
