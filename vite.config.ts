@@ -23,17 +23,6 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    include: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],
-    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'tests/']
-    }
-  },
   server: {
     cors: {
       origin: [/chrome-extension:\/\//]
