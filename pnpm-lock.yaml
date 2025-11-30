@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       axios:
-        specifier: ^1.8.2
-        version: 1.11.0
+        specifier: ^1.12.0
+        version: 1.12.0
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -56,10 +56,10 @@ importers:
         version: 2.2.0
       '@rollup/plugin-json':
         specifier: ^6.1.0
-        version: 6.1.0(rollup@4.49.0)
+        version: 6.1.0(rollup@2.79.2)
       '@rollup/plugin-typescript':
         specifier: ^9.0.2
-        version: 9.0.2(rollup@4.49.0)(tslib@2.8.1)(typescript@5.9.2)
+        version: 9.0.2(rollup@2.79.2)(tslib@2.8.1)(typescript@5.9.2)
       '@types/chrome':
         specifier: ^0.0.287
         version: 0.0.287
@@ -125,10 +125,10 @@ importers:
         version: 5.9.2
       unplugin-auto-import:
         specifier: ^0.18.2
-        version: 0.18.6(@vueuse/core@9.13.0(vue@3.5.20(typescript@5.9.2)))(rollup@4.49.0)
+        version: 0.18.6(@vueuse/core@9.13.0(vue@3.5.20(typescript@5.9.2)))(rollup@2.79.2)
       unplugin-vue-components:
         specifier: ^0.27.3
-        version: 0.27.5(@babel/parser@7.28.3)(rollup@4.49.0)(vue@3.5.20(typescript@5.9.2))
+        version: 0.27.5(@babel/parser@7.28.3)(rollup@2.79.2)(vue@3.5.20(typescript@5.9.2))
       vite:
         specifier: ^7.1.3
         version: 7.1.3(@types/node@20.19.11)(jiti@2.5.1)(less@4.4.1)(yaml@2.8.1)
@@ -990,8 +990,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.11.0:
-    resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
+  axios@1.12.0:
+    resolution: {integrity: sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1173,6 +1173,7 @@ packages:
   crx@5.0.1:
     resolution: {integrity: sha512-n/PzBx/fR1+xZCiJBats9y5zw/a+YBcoJ0ABnUaY56xb1RpXuFhsiCMpNY6WjVtylLzhUUXSWsbitesVg7v2vg==}
     engines: {node: '>=10'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     hasBin: true
 
   css-select@5.2.2:
@@ -3402,19 +3403,19 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@rollup/plugin-json@6.1.0(rollup@4.49.0)':
+  '@rollup/plugin-json@6.1.0(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.49.0)
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
     optionalDependencies:
-      rollup: 4.49.0
+      rollup: 2.79.2
 
-  '@rollup/plugin-typescript@9.0.2(rollup@4.49.0)(tslib@2.8.1)(typescript@5.9.2)':
+  '@rollup/plugin-typescript@9.0.2(rollup@2.79.2)(tslib@2.8.1)(typescript@5.9.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.49.0)
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       resolve: 1.22.10
       typescript: 5.9.2
     optionalDependencies:
-      rollup: 4.49.0
+      rollup: 2.79.2
       tslib: 2.8.1
 
   '@rollup/pluginutils@4.2.1':
@@ -3422,13 +3423,13 @@ snapshots:
       estree-walker: 2.0.2
       picomatch: 2.3.1
 
-  '@rollup/pluginutils@5.2.0(rollup@4.49.0)':
+  '@rollup/pluginutils@5.2.0(rollup@2.79.2)':
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
       picomatch: 4.0.3
     optionalDependencies:
-      rollup: 4.49.0
+      rollup: 2.79.2
 
   '@rollup/rollup-android-arm-eabi@4.49.0':
     optional: true
@@ -3984,7 +3985,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.11.0:
+  axios@1.12.0:
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.4
@@ -6033,9 +6034,9 @@ snapshots:
 
   unicorn-magic@0.1.0: {}
 
-  unimport@3.14.6(rollup@4.49.0):
+  unimport@3.14.6(rollup@2.79.2):
     dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.49.0)
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       acorn: 8.15.0
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
@@ -6054,25 +6055,25 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-auto-import@0.18.6(@vueuse/core@9.13.0(vue@3.5.20(typescript@5.9.2)))(rollup@4.49.0):
+  unplugin-auto-import@0.18.6(@vueuse/core@9.13.0(vue@3.5.20(typescript@5.9.2)))(rollup@2.79.2):
     dependencies:
       '@antfu/utils': 0.7.10
-      '@rollup/pluginutils': 5.2.0(rollup@4.49.0)
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       fast-glob: 3.3.3
       local-pkg: 0.5.1
       magic-string: 0.30.18
       minimatch: 9.0.5
-      unimport: 3.14.6(rollup@4.49.0)
+      unimport: 3.14.6(rollup@2.79.2)
       unplugin: 1.16.1
     optionalDependencies:
       '@vueuse/core': 9.13.0(vue@3.5.20(typescript@5.9.2))
     transitivePeerDependencies:
       - rollup
 
-  unplugin-vue-components@0.27.5(@babel/parser@7.28.3)(rollup@4.49.0)(vue@3.5.20(typescript@5.9.2)):
+  unplugin-vue-components@0.27.5(@babel/parser@7.28.3)(rollup@2.79.2)(vue@3.5.20(typescript@5.9.2)):
     dependencies:
       '@antfu/utils': 0.7.10
-      '@rollup/pluginutils': 5.2.0(rollup@4.49.0)
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       chokidar: 3.6.0
       debug: 4.4.1
       fast-glob: 3.3.3
