@@ -1,4 +1,3 @@
-
 export interface Rule {
   url: string
   method: string
@@ -6,4 +5,6 @@ export interface Rule {
   data: string
   enabled: boolean
   remark: string
+  status?: number
+  delayMs?: number
 }

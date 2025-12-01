@@ -27,9 +27,37 @@
           </div>
         </div>
 
-        <div class="input-group">
-          <label>请求方法</label>
-          <MethodSelect v-model="form.method" />
+        <div class="triple-row">
+          <div class="input-group">
+            <label>请求方法</label>
+            <MethodSelect v-model="form.method" />
+          </div>
+
+          <div class="input-group">
+            <label>状态码</label>
+            <el-select
+              v-model="form.status"
+              placeholder="选择状态码"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="code in statusOptions"
+                :key="code"
+                :label="String(code)"
+                :value="code"
+              />
+            </el-select>
+          </div>
+
+          <div class="input-group">
+            <label>延迟（毫秒）</label>
+            <el-input
+              v-model.number="form.delayMs"
+              placeholder="例如 0 或 500"
+              clearable
+              style="width: 100%"
+            />
+          </div>
         </div>
 
         <div class="input-group">
@@ -192,6 +220,7 @@ const emit = defineEmits<{
   close: []
   submit: [rule: Rule]
 }>()
+const statusOptions = [200, 201, 204, 400, 401, 403, 404, 500]
 
 const form = reactive({
   url: props.editRule?.url || '',
@@ -199,7 +228,9 @@ const form = reactive({
   matchMode: props.editRule?.matchMode || 'contains',
   data: props.editRule?.data || '{\n  "code": 0,\n  "data": {}\n}',
   enabled: props.editRule?.enabled ?? true,
-  remark: props.editRule?.remark || ''
+  remark: props.editRule?.remark || '',
+  status: props.editRule?.status ?? 200,
+  delayMs: props.editRule?.delayMs ?? 0
 })
 
 const jsonError = ref('')
@@ -529,6 +560,15 @@ function validateJson() {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+.triple-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.triple-row > .input-group {
+  flex: 1;
+  min-width: 0;
 }
 
 .ai-row {

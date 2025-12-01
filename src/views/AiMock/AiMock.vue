@@ -95,6 +95,24 @@
                 <span :class="['match-mode-badge', `match-mode-${rule.matchMode || 'contains'}`]">
                   {{ matchModeText[rule.matchMode] || '包含' }}
                 </span>
+                <span
+                  :class="[
+                    'status-badge',
+                    (rule.status || 200) >= 500
+                      ? 'status-5xx'
+                      : (rule.status || 200) >= 400
+                        ? 'status-4xx'
+                        : 'status-2xx'
+                  ]"
+                >
+                  {{ rule.status || 200 }}
+                </span>
+                <span
+                  v-if="(rule.delayMs || 0) > 0"
+                  class="delay-badge"
+                >
+                  {{ rule.delayMs }}ms
+                </span>
                 <span class="url-text">{{ rule.url }}</span>
               </div>
               <div class="rule-actions">
@@ -168,15 +186,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import MockHeader from './components/MockHeader.vue'
 import RuleForm from './components/RuleForm.vue'
 import JsonTreeEditor from './components/JsonTreeEditor.vue'
-
-interface Rule {
-  url: string
-  method: string
-  matchMode: string
-  data: string
-  enabled: boolean
-  remark: string
-}
+import { Rule } from '@/types/rule'
 
 const rules = ref<Rule[]>([])
 const showForm = ref(false)
@@ -374,7 +384,9 @@ onMounted(() => {
         matchMode: rule.matchMode || 'contains',
         data: rule.data || '',
         enabled: rule.enabled !== false,
-        remark: rule.remark || ''
+        remark: rule.remark || '',
+        status: typeof rule.status === 'number' ? rule.status : 200,
+        delayMs: typeof rule.delayMs === 'number' ? rule.delayMs : 0
       }))
     })
   }
@@ -513,7 +525,7 @@ onMounted(() => {
 
 #rules {
   max-height: 400px;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .rule-item {
@@ -657,6 +669,34 @@ onMounted(() => {
 .match-mode-exact {
   background: #e0e7ff;
   color: #4338ca;
+}
+
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.status-2xx {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-4xx {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-5xx {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.delay-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #6b7280;
+  background: #f3f4f6;
+  flex-shrink: 0;
 }
 
 .rule-data-wrapper {

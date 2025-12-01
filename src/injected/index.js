@@ -38,6 +38,7 @@ function init() {
     } catch (_) {
       console.error('normalizeUrl error:', _)
     }
+
     return String(input)
   }
 
@@ -84,13 +85,13 @@ function init() {
         }
         return
       }
-      // 超时保护：100ms 内没收到响应，自动放行（发送真实请求）
+      // 超时保护：30s 内没收到响应，自动放行（发送真实请求）
       setTimeout(() => {
         if (pendingRequests.has(id)) {
           resolve({ shouldMock: false })
           pendingRequests.delete(id)
         }
-      }, 1000)
+      }, 30000)
     })
   }
 
@@ -100,15 +101,47 @@ function init() {
     const response = await sendMockRequest(url, method)
 
     if (response.shouldMock) {
-      return new Response(JSON.stringify(response.mockData), {
+      const noBody = isNoBodyStatus(response.status)
+      const body = noBody ? null : JSON.stringify(response.mockData)
+      const resp = new Response(body, {
         status: response.status,
         headers: response.headers
       })
+      if (noBody) {
+        return new Proxy(resp, {
+          get(target, prop, receiver) {
+            if (prop === 'json') return async () => null
+            if (prop === 'text') return async () => ''
+            return Reflect.get(target, prop, receiver)
+          }
+        })
+      }
+      return resp
     }
 
     return originalFetch.apply(this, arguments)
   }
 
+  function statusTextFrom(code) {
+    const map = {
+      101: 'Switching Protocols',
+      200: 'OK',
+      201: 'Created',
+      204: 'No Content',
+      205: 'Reset Content',
+      304: 'Not Modified',
+      400: 'Bad Request',
+      401: 'Unauthorized',
+      403: 'Forbidden',
+      404: 'Not Found',
+      500: 'Internal Server Error'
+    }
+    return map[code] || 'OK'
+  }
+
+  function isNoBodyStatus(code) {
+    return code === 101 || code === 204 || code === 205 || code === 304
+  }
   // ========== XMLHttpRequest 拦截 ==========
   XMLHttpRequest.prototype.open = function (method, url, ...rest) {
     this._mockMethod = method.toUpperCase()
@@ -129,10 +162,15 @@ function init() {
     if (response.shouldMock) {
       Object.defineProperty(this, 'readyState', { writable: true, value: 4 })
       Object.defineProperty(this, 'status', { writable: true, value: response.status })
-      Object.defineProperty(this, 'statusText', { writable: true, value: 'OK' })
+      Object.defineProperty(this, 'statusText', {
+        writable: true,
+        value: statusTextFrom(response.status)
+      })
 
-      const bodyStr =
-        typeof response.mockData === 'string'
+      const noBody = isNoBodyStatus(response.status)
+      const bodyStr = noBody
+        ? ''
+        : typeof response.mockData === 'string'
           ? response.mockData
           : JSON.stringify(response.mockData)
 
@@ -141,9 +179,11 @@ function init() {
         writable: true,
         value:
           this.responseType === 'json'
-            ? typeof response.mockData === 'string'
-              ? JSON.parse(response.mockData)
-              : response.mockData
+            ? noBody
+              ? null
+              : typeof response.mockData === 'string'
+                ? JSON.parse(response.mockData)
+                : response.mockData
             : bodyStr
       })
 

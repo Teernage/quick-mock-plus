@@ -1,3 +1,5 @@
+console.log('content script is running')
+
 /**
  * 在页面中注入扩展的 injected.js 脚本。
  * 使用 chrome.runtime.getURL 获取扩展内资源的绝对 URL。
@@ -92,14 +94,23 @@ window.addEventListener('message', async (event) => {
           console.warn('[Mock] JSON 解析失败，使用原始字符串')
         }
 
+        const status = Number(rule.status) || 200
+        const delay = Number(rule.delayMs) || 0
+        if (delay > 0) {
+          await new Promise((r) => setTimeout(r, delay))
+        }
+
         window.postMessage(
           {
             type: 'MOCK_RESPONSE',
             id,
             shouldMock: true,
             mockData,
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            status,
+            headers:
+              status === 101 || status === 204 || status === 205 || status === 304
+                ? {}
+                : { 'Content-Type': 'application/json' }
           },
           '*'
         )
