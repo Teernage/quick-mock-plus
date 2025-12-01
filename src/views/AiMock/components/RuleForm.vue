@@ -23,7 +23,6 @@
               v-model="form.url"
               placeholder="输入 URL 或关键词"
               clearable
-              style="width: 100%"
             />
           </div>
         </div>
@@ -39,27 +38,27 @@
             v-model="form.remark"
             placeholder="填写接口用途说明，如：日历信息查询"
             clearable
-            style="width: 100%"
           />
         </div>
 
         <div class="input-group">
-          <label>AI 生成</label>
-          <div class="url-row ai-row">
-            <el-input
-              type="textarea"
-              :rows="2"
-              v-model="aiTypePrompt"
-              placeholder="输入接口的类型即可自动生成 Mock 数据，或者描述你想要的数据"
-              clearable
-              style="flex: 1"
-            />
+          <div class="ai-header-row">
+            <label>AI 生成</label>
             <el-button
               type="primary"
               :loading="isGenerating"
               @click="generateFromDeepseek"
-              >生成</el-button
-            >
+              >生成
+            </el-button>
+          </div>
+          <div class="url-row ai-row">
+            <el-input
+              v-model="aiTypePrompt"
+              type="textarea"
+              :rows="2"
+              placeholder="输入接口的类型即可自动生成 Mock 数据，或者描述你想要的数据"
+              clearable
+            />
           </div>
         </div>
 
@@ -74,8 +73,8 @@
             </button>
           </div>
           <textarea
-            v-model="form.data"
             ref="jsonTextarea"
+            v-model="form.data"
           >
             placeholder='{"code": 0, "data": {}}'
           >
@@ -142,8 +141,8 @@
         </div>
         <div class="json-dialog-body">
           <textarea
-            v-model="form.data"
             ref="dialogTextarea"
+            v-model="form.data"
             class="dialog-textarea"
           ></textarea>
         </div>
@@ -179,7 +178,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, nextTick } from 'vue'
+import { ref, reactive } from 'vue'
 import MatchModeSelect from './MatchModeSelect.vue'
 import MethodSelect from './MethodSelect.vue'
 import { Rule } from '@/types/rule'
@@ -496,6 +495,9 @@ function validateJson() {
 .input-group {
   margin-bottom: 16px;
 }
+.input-group :deep(.el-input) {
+  width: 100%;
+}
 
 .input-group label {
   display: block;
@@ -532,13 +534,25 @@ function validateJson() {
 .ai-row {
   align-items: flex-start;
 }
+.ai-header-row {
+  display: flex;
+  align-items: center;
+}
 
 .ai-row :deep(.el-button) {
   margin-top: 2px;
 }
+.ai-header-row :deep(.el-button) {
+  margin-left: 8px;
+  height: 24px;
+  margin-bottom: 3px;
+}
 
 .ai-row :deep(.el-textarea__inner) {
   resize: vertical;
+}
+.ai-row :deep(.el-textarea) {
+  flex: 1;
 }
 
 textarea {
