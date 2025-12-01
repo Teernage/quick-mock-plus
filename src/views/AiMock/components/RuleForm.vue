@@ -16,7 +16,19 @@
 
       <div class="modal-body">
         <div class="input-group">
-          <label>URL 匹配规则</label>
+          <div class="input-label">
+            <label>URL 匹配规则</label>
+            <el-button
+              v-if="form.matchMode === 'regex'"
+              size="small"
+              type="primary"
+              :loading="isGeneratingRegex"
+              @click="generateRegexFromDeepseek"
+              class="generate-regex-btn"
+            >
+              AI 生成正则
+            </el-button>
+          </div>
           <div class="url-row">
             <MatchModeSelect v-model="form.matchMode" />
             <el-input
@@ -237,6 +249,7 @@ const jsonError = ref('')
 const aiTypePrompt = ref('')
 const apiKey = ref(localStorage.getItem('DEEPSEEK_API_KEY') || '')
 const isGenerating = ref(false)
+const isGeneratingRegex = ref(false)
 const showJsonDialog = ref(false)
 const jsonTextarea = ref<HTMLTextAreaElement | null>(null)
 const dialogTextarea = ref<HTMLTextAreaElement | null>(null)
@@ -255,6 +268,14 @@ function extractJson(text: string): string {
   if (m1) return m1[1].trim()
   const m2 = text.match(/```\s*([\s\S]*?)\s*```/)
   if (m2) return m2[1].trim()
+  return text.trim()
+}
+
+function extractRegex(text: string): string {
+  const m1 = text.match(/\/\^.*\$\/[a-z]*/i)
+  if (m1) return m1[0].replace(/^\/.*/, (s) => s.replace(/^\//, '').replace(/\/[a-z]*$/i, ''))
+  const m2 = text.match(/\^.*\$/m)
+  if (m2) return m2[0].trim()
   return text.trim()
 }
 
@@ -374,6 +395,89 @@ async function generateFromDeepseek() {
   }
 }
 
+async function generateRegexFromDeepseek() {
+  const sample = form.url.trim()
+  if (!sample) {
+    ElMessage.warning('请输入路由模式，如 /api/users/:id')
+    return
+  }
+  if (!apiKey.value) {
+    try {
+      const r: any = await ElMessageBox.prompt('请输入 DeepSeek API Key', '设置 API Key', {
+        inputType: 'password',
+        inputPlaceholder: 'sk-...'
+      })
+      setApiKey(r.value)
+    } catch (_) {
+      return
+    }
+  }
+  isGeneratingRegex.value = true
+  try {
+    const body = {
+      model: 'deepseek-chat',
+      temperature: 0,
+      stream: false,
+      messages: [
+        {
+          role: 'system',
+          content: '只返回一个正则字符串，必须以 ^ 开头、以 $ 结尾，不返回解释或代码块。'
+        },
+        {
+          role: 'user',
+          content:
+            '根据下列路由模式生成用于匹配URL路径的正则表达式（不含域名和协议）：' +
+            sample +
+            '\n要求：路径参数用[^/]+；允许可选结尾斜杠；只返回正则字符串。'
+        }
+      ]
+    }
+    const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey.value}` },
+      body: JSON.stringify(body)
+    })
+    if (!res.ok) {
+      let errMsg = `HTTP ${res.status}`
+      try {
+        const err = await res.json()
+        errMsg = err?.error?.message || errMsg
+      } catch {}
+      if (res.status === 401 || /invalid|unauthor|expired/i.test(errMsg)) {
+        try {
+          const r: any = await ElMessageBox.prompt(
+            'API Key 无效或已过期，请重新输入',
+            '设置 API Key',
+            {
+              inputType: 'password',
+              inputPlaceholder: 'sk-...'
+            }
+          )
+          setApiKey(r.value)
+          ElMessage.success('API Key 已更新，请重试')
+        } catch {}
+        return
+      }
+      if (res.status === 429 || res.status === 402 || /quota|insufficient|limit/i.test(errMsg)) {
+        ElMessage.error('额度不足或已达限制，请检查账户配额')
+        return
+      }
+      ElMessage.error('生成失败：' + errMsg)
+      return
+    }
+    const data: any = await res.json()
+    const content: string = data?.choices?.[0]?.message?.content || ''
+    const regex = extractRegex(content)
+    form.matchMode = 'regex'
+    form.url = regex
+    ElMessage.success('已生成正则')
+  } catch (e) {
+    ElMessage.error('生成失败，请检查 API Key 或网络')
+  } finally {
+    isGeneratingRegex.value = false
+  }
+}
+
 const handleSubmit = () => {
   if (!form.url.trim()) {
     ElMessage.warning('请输入 URL')
@@ -436,7 +540,18 @@ function validateJson() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.generate-regex-btn {
+  margin-left: 34px;
+  margin-bottom: 4px;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
 .rule-form-overlay {
   position: fixed;
   top: 0;

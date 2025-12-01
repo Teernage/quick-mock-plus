@@ -48,8 +48,8 @@ async function getMockRulesSafely() {
 /**
  * 根据匹配模式对 URL 进行匹配。
  * @param {*} url  - 请求的 URL。
- * @param {*} pattern  - 匹配规则。
- * @param {*} mode  - 匹配模式
+ * @param {*} pattern  - 匹配规则。若模式为 'regex'，支持 '/pattern/flags' 或普通正则字符串。
+ * @param {*} mode  - 匹配模式：'exact' | 'contains' | 'regex'
  * @returns {boolean}  - 匹配结果。
  */
 function matchUrl(url, pattern, mode) {
@@ -57,6 +57,14 @@ function matchUrl(url, pattern, mode) {
     switch (mode) {
       case 'exact':
         return url === pattern
+      case 'regex': {
+        if (typeof pattern !== 'string') return false
+        const m = pattern.match(/^\/(.+)\/([a-z]*)$/)
+        if (m) {
+          return new RegExp(m[1], m[2]).test(url)
+        }
+        return new RegExp(pattern).test(url)
+      }
       case 'contains':
       default:
         return url.includes(pattern)

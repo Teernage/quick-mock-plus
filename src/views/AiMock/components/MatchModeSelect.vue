@@ -36,7 +36,8 @@ const emit = defineEmits(['update:modelValue'])
 // 下拉选项
 const options = [
   { value: 'contains', label: '包含' },
-  { value: 'exact', label: '完整匹配' }
+  { value: 'exact', label: '完整匹配' },
+  { value: 'regex', label: '正则' }
 ]
 
 // 创建计算属性用于v-model绑定

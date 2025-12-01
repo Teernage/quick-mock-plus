@@ -245,7 +245,8 @@ function toTree(json: any): TreeNode[] {
 
 const matchModeText = {
   contains: '包含',
-  exact: '完整'
+  exact: '完整',
+  regex: '正则'
 }
 
 const searchText = ref('')
@@ -669,6 +670,11 @@ onMounted(() => {
 .match-mode-exact {
   background: #e0e7ff;
   color: #4338ca;
+}
+
+.match-mode-regex {
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .status-badge {
