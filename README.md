@@ -49,15 +49,15 @@ npm install @rollup/rollup-darwin-arm64
 
 或删除 `package-lock.json` 后重装依赖。
 
-### 构建扩展
+### 本地打包
 
 ```
-pnpm run chrome
+pnpm run build
 ```
 
-打包成功后，`CrxFile` 目录会生成最新的 `.crx` 和日志文件。
+打包成功后，`dist` 目录直接在chrome://extensions/页面加载即可。
 
-## 使用指南
+##
 
 1. 添加规则：选择匹配模式与方法，填写 URL 与备注，点击添加/保存
 2. AI 生成：在“AI 生成”输入接口类型/结构描述，点击“生成”，自动填充 Mock JSON
@@ -75,19 +75,15 @@ pnpm run chrome
 ## 目录结构概览
 
 ```
-CrxFile/                  # 打包产物（首次构建后生成）
-  ├─ packageName.crx      # 扩展包
-  ├─ packageName.pem      # 证书
-  └─ output.log           # 构建日志
-scripts/
-  └─ build-and-log-crx    # 自动生成 crx 与日志的脚本
 src/
-  ├─ views/AiMock/        # Mock 规则与编辑器
+  ├─ views/AiMock/        # Mock 侧边栏的UI及交互
   ├─ http/                # 请求封装
   ├─ store/               # 状态（pinia）
   ├─ style/               # 样式与主题
-  ├─ types/               # TypeScript 类型
-  └─ ...
+  ├─ BackgroundScript/    # 后台脚本，处理 API 请求与响应
+  ├─ contentScript/       # 内容脚本
+  ├─ injected/            # 注入页面的脚本，用于修改页面行为
+  └─ types/               # TypeScript 类型
 ```
 
 ## Git Hooks（可选）
