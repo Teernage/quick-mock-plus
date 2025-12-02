@@ -3,7 +3,7 @@ import { defineManifest } from '@crxjs/vite-plugin'
 export default defineManifest({
   manifest_version: 3,
   name: 'AI Mock',
-  version: '0.0.0',
+  version: '1.0.0',
   description: '欢迎使用 AI Mock 插件',
   host_permissions: ['<all_urls>'],
   icons: {

@@ -17,9 +17,9 @@
           添加规则
         </button>
         <button
+          v-if="rules.length > 0"
           class="btn-clear"
           @click="clearAllRules"
-          v-if="rules.length > 0"
         >
           清空全部
         </button>
@@ -82,8 +82,8 @@
             :class="['rule-item', { disabled: !rule.enabled }]"
           >
             <div
-              class="remark"
               v-if="rule.remark"
+              class="remark"
             >
               <span class="remark-value">{{ rule.remark }} </span>
             </div>
@@ -173,8 +173,8 @@
     <!-- 规则表单弹窗 -->
     <RuleForm
       v-if="showForm"
-      :editRule="editingRule"
-      :isEdit="isEditing"
+      :edit-rule="editingRule"
+      :is-edit="isEditing"
       @close="closeForm"
       @submit="handleSubmit"
     />
@@ -195,53 +195,6 @@ const editingIndex = ref(-1)
 const editingRule = ref<Rule | undefined>()
 
 const expandedRules = reactive(new Set<number>())
-
-interface TreeNode {
-  label: string
-  children?: TreeNode[]
-}
-
-const treeProps = { label: 'label', children: 'children' }
-
-function isJsonString(s: string): boolean {
-  if (!s) return false
-  try {
-    const v = JSON.parse(s)
-    return true
-  } catch {
-    return false
-  }
-}
-
-function parseJsonSafe(s: string): any | null {
-  try {
-    return JSON.parse(s)
-  } catch {
-    return null
-  }
-}
-
-function formatPrimitive(v: any): string {
-  if (typeof v === 'string') return `"${v}"`
-  if (v === null) return 'null'
-  return String(v)
-}
-
-function nodeFrom(value: any, key: string): TreeNode {
-  if (value && typeof value === 'object') {
-    const children = Array.isArray(value)
-      ? value.map((item, idx) => nodeFrom(item, `[${idx}]`))
-      : Object.keys(value).map((k) => nodeFrom(value[k], k))
-    return { label: key, children }
-  }
-  return { label: `${key}: ${formatPrimitive(value)}` }
-}
-
-function toTree(json: any): TreeNode[] {
-  if (Array.isArray(json)) return json.map((item, idx) => nodeFrom(item, `[${idx}]`))
-  if (json && typeof json === 'object') return Object.keys(json).map((k) => nodeFrom(json[k], k))
-  return [{ label: formatPrimitive(json) }]
-}
 
 const matchModeText = {
   contains: '包含',
